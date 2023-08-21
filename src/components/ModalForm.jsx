@@ -24,7 +24,7 @@ const ModalForm = ({
     >
       <form
         onSubmit={formProps.handleSubmit}
-        className="relative border rounded-lg bg-white border-blue-300 shadow-black p-5 flex flex-col gap-5 w-full sm:max-w-[800px]  "
+        className="relative border rounded-lg bg-gray-700 border-blue-300 shadow-md p-5 flex flex-col gap-5 w-full sm:max-w-[800px]  "
       >
         <button
           type="button"
@@ -33,7 +33,7 @@ const ModalForm = ({
         >
           <img className="w-[100%]" src="/images/cross.png" alt="" />
         </button>
-        <h2 className="text-4xl p-5 font-bold ">{formProps.title}</h2>
+        <h2 className="text-4xl p-5 font-bold text-white">{formProps.title}</h2>
 
         <TextInput
           type={"text"}
@@ -88,7 +88,7 @@ const ModalForm = ({
           registerProps={formProps.register("image_url", { required: true })}
         />
 
-        <button className="bg-blue-600 w-52 self-center rounded-lg p-2">
+        <button className="bg-gray-800 hover:bg-gray-900 focus:outline-none focus:bg-gray-700 w-52 self-center rounded-lg p-2 text-white font-semibold transition duration-300 ease-in-out">
           {formProps.buttonText}
         </button>
       </form>

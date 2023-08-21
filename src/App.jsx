@@ -16,24 +16,24 @@ function App() {
     handleToggleModal,
   } = useUserManagement();
 
-  console.log(users);
-
   return (
-    <section className="flex">
-      <Header handleToggleModal={handleToggleModal} />
-      <UserList
-        users={users}
-        deleteUser={deleteUser}
-        handleClickUpdateUser={handleClickUpdateUser}
-      />
-      <ModalForm
-        isShowingModal={isShowingModal}
-        isUpdatingUser={isUpdatingUser}
-        handleToggleModal={handleToggleModal}
-        createUser={createUser}
-        updateUser={updateUser}
-      />
-    </section>
+    <div className="bg-gray-900 min-h-screen">
+      <section className="flex">
+        <Header handleToggleModal={handleToggleModal} />
+        <UserList
+          users={users}
+          deleteUser={deleteUser}
+          handleClickUpdateUser={handleClickUpdateUser}
+        />
+        <ModalForm
+          isShowingModal={isShowingModal}
+          isUpdatingUser={isUpdatingUser}
+          handleToggleModal={handleToggleModal}
+          createUser={createUser}
+          updateUser={updateUser}
+        />
+      </section>
+    </div>
   );
 }
 

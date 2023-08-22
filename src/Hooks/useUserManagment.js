@@ -8,18 +8,40 @@ import {
 
 import { EMPTY_FORM_VALUES } from "../shared/constants.js";
 
+const iconCheck = "/images/check.png";
+const icondelete = "/images/delete.png";
+const iconUpdated = "/images/updated.png";
+const iconError = "/images/close.png";
+
 export const useUserManagement = () => {
   const [isShowingModal, setIsShowingModal] = useState(false);
   const [isUpdatingUser, setIsUpdatingUser] = useState(null);
   const [users, setUsers] = useState([]);
+  const [urlicon, setUrlicon] = useState(false);
+  const [isShowingPopUp, setIsShowingPopUp] = useState(false);
+  const [messagePopUp, setMessagePopUp] = useState("");
 
   const createUser = (newUser, reset) => {
     apiCreateUser(newUser)
       .then(() => {
         getAllUsers().then(({ data }) => setUsers(data));
         reset(EMPTY_FORM_VALUES);
+        setIsShowingPopUp(true);
+        setMessagePopUp("User created successfully");
+        setUrlicon(iconCheck);
+        setTimeout(() => {
+          setIsShowingPopUp(false);
+        }, 2000);
       })
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        console.log(error);
+        setIsShowingPopUp(true);
+        setMessagePopUp("Error creating user");
+        setUrlicon(iconError);
+        setTimeout(() => {
+          setIsShowingPopUp(false);
+        }, 2000);
+      })
       .finally(() => {
         setIsShowingModal(false);
       });
@@ -27,7 +49,17 @@ export const useUserManagement = () => {
 
   const deleteUser = (idUser) => {
     apiDeleteUser(idUser)
-      .then(() => getAllUsers().then(({ data }) => setUsers(data)))
+      .then(() =>
+        getAllUsers().then(({ data }) => {
+          setUsers(data);
+          setIsShowingPopUp(true);
+          setMessagePopUp("User deleted successfully");
+          setUrlicon(icondelete);
+          setTimeout(() => {
+            setIsShowingPopUp(false);
+          }, 2000);
+        })
+      )
       .catch((error) => console.log(error));
   };
 
@@ -41,6 +73,12 @@ export const useUserManagement = () => {
       .then(() => {
         getAllUsers().then(({ data }) => setUsers(data));
         reset(EMPTY_FORM_VALUES);
+        setIsShowingPopUp(true);
+        setMessagePopUp("User updated successfully");
+        setUrlicon(iconUpdated);
+        setTimeout(() => {
+          setIsShowingPopUp(false);
+        }, 2000);
       })
       .catch((error) => console.log(error))
       .finally(() => {
@@ -66,5 +104,8 @@ export const useUserManagement = () => {
     handleClickUpdateUser,
     updateUser,
     handleToggleModal,
+    urlicon,
+    isShowingPopUp,
+    messagePopUp,
   };
 };

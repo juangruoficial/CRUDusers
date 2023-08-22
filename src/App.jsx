@@ -1,6 +1,7 @@
 import "./App.css";
 import Header from "./components/Header";
 import ModalForm from "./components/ModalForm";
+import RequestSuccesfull from "./components/PopUps/RequestSuccesfull";
 import UserList from "./components/UserList";
 import { useUserManagement } from "./Hooks/useUserManagment";
 
@@ -14,6 +15,9 @@ function App() {
     handleClickUpdateUser,
     updateUser,
     handleToggleModal,
+    urlicon,
+    isShowingPopUp,
+    messagePopUp,
   } = useUserManagement();
 
   return (
@@ -25,12 +29,18 @@ function App() {
           deleteUser={deleteUser}
           handleClickUpdateUser={handleClickUpdateUser}
         />
+
         <ModalForm
           isShowingModal={isShowingModal}
           isUpdatingUser={isUpdatingUser}
           handleToggleModal={handleToggleModal}
           createUser={createUser}
           updateUser={updateUser}
+        />
+        <RequestSuccesfull
+          urlicon={urlicon}
+          messagePopUp={messagePopUp}
+          isShowingPopUp={isShowingPopUp}
         />
       </section>
     </div>

@@ -21,12 +21,17 @@ function App() {
     isLoginUser,
     singInUser,
     isLogged,
+    userLogged,
   } = useUserManagement();
 
   return (
     <div className="bg-gray-900 min-h-screen">
       <section className="flex">
-        <Header handleToggleModal={handleToggleModal} isLogged={isLogged} />
+        <Header
+          handleToggleModal={handleToggleModal}
+          isLogged={isLogged}
+          userLogged={userLogged}
+        />
         <UserList
           users={users}
           deleteUser={deleteUser}

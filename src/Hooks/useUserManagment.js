@@ -7,6 +7,7 @@ import {
 } from "../Services/apiFunctions.js";
 
 import { EMPTY_FORM_VALUES } from "../shared/constants.js";
+import { set } from "react-hook-form";
 
 const iconUrls = {
   check: "/images/check.png",
@@ -24,6 +25,7 @@ export const useUserManagement = () => {
   const [messagePopUp, setMessagePopUp] = useState("");
   const [isLoginUser, setIsLoginUser] = useState(false);
   const [isLogged, setIsLogged] = useState(false);
+  const [userLogged, setUserLogged] = useState(null);
 
   const showPopUp = (message, icon) => {
     setIsShowingPopUp(true);
@@ -69,18 +71,25 @@ export const useUserManagement = () => {
 
   const deleteUser = (idUser) => {
     console.log("isLogged", isLogged);
-    if (!isLogged) {
-      showPopUp("You must be logged in to delete users.", "error");
+    console.log("idUser", idUser);
+
+    if (isLogged) {
+      if (idUser === userLogged.id) {
+        apiDeleteUser(idUser)
+          .then(() => {
+            fetchUsers();
+            showPopUp("User deleted successfully", "delete");
+          })
+          .catch((error) => console.log(error))
+          .finally(() => closeModal());
+      } else {
+        showPopUp("You can't delete other users.", "error");
+        return;
+      }
+    } else {
+      showPopUp("You must be logged in to delete the account.", "error");
       return;
     }
-
-    apiDeleteUser(idUser)
-      .then(() => {
-        fetchUsers();
-        showPopUp("User deleted successfully", "delete");
-      })
-      .catch((error) => console.log(error))
-      .finally(() => closeModal());
   };
 
   const singInUser = (user) => {
@@ -92,7 +101,7 @@ export const useUserManagement = () => {
         setIsLogged(true);
         setIsShowingModal(false);
         showPopUp("User successfully log in", "check");
-
+        setUserLogged(foundUser);
         console.log(foundUser);
         console.log("isLogged", isLogged);
       } else {
@@ -132,6 +141,12 @@ export const useUserManagement = () => {
     }
     if (isLoginUser) setIsLoginUser(false);
     setIsShowingModal(!isShowingModal);
+
+    if (modalType === "logout") {
+      setIsLogged(false);
+      showPopUp("User successfully log out", "check");
+      setIsShowingModal(false);
+    }
   };
 
   useEffect(() => {
@@ -153,5 +168,6 @@ export const useUserManagement = () => {
     isLoginUser,
     singInUser,
     isLogged,
+    userLogged,
   };
 };

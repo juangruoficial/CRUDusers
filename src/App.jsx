@@ -20,12 +20,13 @@ function App() {
     messagePopUp,
     isLoginUser,
     singInUser,
+    isLogged,
   } = useUserManagement();
 
   return (
     <div className="bg-gray-900 min-h-screen">
       <section className="flex">
-        <Header handleToggleModal={handleToggleModal} />
+        <Header handleToggleModal={handleToggleModal} isLogged={isLogged} />
         <UserList
           users={users}
           deleteUser={deleteUser}

@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { EMPTY_FORM_VALUES } from "../shared/constants";
-import { useUserManagement } from "./useUserManagment";
 
 export function useModalFormLogic({
   isUpdatingUser,
@@ -43,7 +42,6 @@ export function useModalFormLogic({
 
   useEffect(() => {
     if (!isShowingModal) resetRef.current(EMPTY_FORM_VALUES);
-    console.log("isLoginUser", isLoginUser);
   }, [isShowingModal, isLoginUser]);
 
   const formProps = {

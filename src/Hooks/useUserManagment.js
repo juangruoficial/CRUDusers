@@ -8,10 +8,12 @@ import {
 
 import { EMPTY_FORM_VALUES } from "../shared/constants.js";
 
-const iconCheck = "/images/check.png";
-const icondelete = "/images/delete.png";
-const iconUpdated = "/images/updated.png";
-const iconError = "/images/close.png";
+const iconUrls = {
+  check: "/images/check.png",
+  delete: "/images/delete.png",
+  updated: "/images/updated.png",
+  error: "/images/close.png",
+};
 
 export const useUserManagement = () => {
   const [isShowingModal, setIsShowingModal] = useState(false);
@@ -23,73 +25,83 @@ export const useUserManagement = () => {
   const [isLoginUser, setIsLoginUser] = useState(false);
   const [isLogged, setIsLogged] = useState(false);
 
+  const showPopUp = (message, icon) => {
+    setIsShowingPopUp(true);
+    setMessagePopUp(message);
+    setUrlicon(iconUrls[icon]);
+    setTimeout(() => {
+      setIsShowingPopUp(false);
+    }, 2000);
+  };
+
+  const closeModal = () => {
+    setIsUpdatingUser(null);
+    setIsShowingModal(false);
+    setIsLoginUser(false);
+  };
+
+  const fetchUsers = () => {
+    getAllUsers().then(({ data }) => setUsers(data));
+  };
   const createUser = (newUser, reset) => {
+    const emailExists = users.some((user) => user.email === newUser.email);
+
+    if (emailExists) {
+      showPopUp(
+        "User with this email already exists. Please use a different email.",
+        "error"
+      );
+      return;
+    }
+
     apiCreateUser(newUser)
       .then(() => {
-        getAllUsers().then(({ data }) => setUsers(data));
+        fetchUsers();
         reset(EMPTY_FORM_VALUES);
-        setIsShowingPopUp(true);
-        setMessagePopUp("User created successfully");
-        setUrlicon(iconCheck);
-        setTimeout(() => {
-          setIsShowingPopUp(false);
-        }, 2000);
+        showPopUp("User created successfully", "check");
       })
       .catch((error) => {
         console.log(error);
-        setIsShowingPopUp(true);
-        setMessagePopUp("Error creating user");
-        setUrlicon(iconError);
-        setTimeout(() => {
-          setIsShowingPopUp(false);
-        }, 2000);
+        showPopUp("Error creating user", "error");
       })
-      .finally(() => {
-        setIsShowingModal(false);
-      });
+      .finally(() => closeModal());
   };
 
   const deleteUser = (idUser) => {
+    console.log("isLogged", isLogged);
+    if (!isLogged) {
+      showPopUp("You must be logged in to delete users.", "error");
+      return;
+    }
+
     apiDeleteUser(idUser)
-      .then(() =>
-        getAllUsers().then(({ data }) => {
-          setUsers(data);
-          setIsShowingPopUp(true);
-          setMessagePopUp("User deleted successfully");
-          setUrlicon(icondelete);
-          setTimeout(() => {
-            setIsShowingPopUp(false);
-          }, 2000);
-        })
-      )
-      .catch((error) => console.log(error));
+      .then(() => {
+        fetchUsers();
+        showPopUp("User deleted successfully", "delete");
+      })
+      .catch((error) => console.log(error))
+      .finally(() => closeModal());
   };
 
   const singInUser = (user) => {
     const { email, password } = user;
-
     const foundUser = users.find((user) => user.email === email);
-
+    console.log("isLogged", isLogged);
     if (foundUser) {
       if (foundUser.password === password) {
         setIsLogged(true);
+        setIsShowingModal(false);
+        showPopUp("User successfully log in", "check");
 
-        setIsShowingPopUp(true);
-        setMessagePopUp("User successfully log in");
-        setUrlicon(iconCheck);
-        setTimeout(() => {
-          setIsShowingPopUp(false);
-        }, 2000);
+        console.log(foundUser);
+        console.log("isLogged", isLogged);
       } else {
         setIsShowingPopUp(true);
-        setMessagePopUp("Incorrect password");
-        setUrlicon(icondelete);
-        setTimeout(() => {
-          setIsShowingPopUp(false);
-        }, 2000);
+        showPopUp("Incorrect password", "error");
       }
     } else {
-      console.log("User not found");
+      setIsShowingPopUp(true);
+      showPopUp("User not found", "error");
     }
   };
 
@@ -101,14 +113,9 @@ export const useUserManagement = () => {
   const updateUser = (userUpdated, reset) => {
     apiUpdateUser(isUpdatingUser.id, userUpdated)
       .then(() => {
-        getAllUsers().then(({ data }) => setUsers(data));
+        fetchUsers();
         reset(EMPTY_FORM_VALUES);
-        setIsShowingPopUp(true);
-        setMessagePopUp("User updated successfully");
-        setUrlicon(iconUpdated);
-        setTimeout(() => {
-          setIsShowingPopUp(false);
-        }, 2000);
+        showPopUp("User updated successfully", "updated");
       })
       .catch((error) => console.log(error))
       .finally(() => {
@@ -118,19 +125,13 @@ export const useUserManagement = () => {
 
   const handleToggleModal = (modalType) => {
     setIsUpdatingUser(null);
+    console.log("Isloged", isLogged, "isloginUser", isLoginUser);
 
     if (modalType === "login") {
       setIsLoginUser(true);
-    } else if (isLoginUser) {
-      setIsLoginUser(false);
     }
-
-    // Cerrar el modal si el usuario ha iniciado sesión
-    if (isLogged) {
-      setIsLogged(false);
-    } else {
-      setIsShowingModal(!isShowingModal);
-    }
+    if (isLoginUser) setIsLoginUser(false);
+    setIsShowingModal(!isShowingModal);
   };
 
   useEffect(() => {

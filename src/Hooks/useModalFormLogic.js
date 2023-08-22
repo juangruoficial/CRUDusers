@@ -10,6 +10,7 @@ export function useModalFormLogic({
   isShowingModal,
   isLoginUser,
   omittedFields = [],
+  singInUser,
 }) {
   const { handleSubmit, register, reset, watch, formState } = useForm();
   const title = isUpdatingUser
@@ -27,7 +28,13 @@ export function useModalFormLogic({
   const resetRef = useRef(reset);
 
   const submit = (data) => {
-    isUpdatingUser ? updateUser(data, reset) : createUser(data, reset);
+    if (isLoginUser) {
+      singInUser(data);
+    } else if (isUpdatingUser) {
+      updateUser(data, reset);
+    } else {
+      createUser(data, reset);
+    }
   };
 
   useEffect(() => {

@@ -21,6 +21,7 @@ export const useUserManagement = () => {
   const [isShowingPopUp, setIsShowingPopUp] = useState(false);
   const [messagePopUp, setMessagePopUp] = useState("");
   const [isLoginUser, setIsLoginUser] = useState(false);
+  const [isLogged, setIsLogged] = useState(false);
 
   const createUser = (newUser, reset) => {
     apiCreateUser(newUser)
@@ -64,7 +65,33 @@ export const useUserManagement = () => {
       .catch((error) => console.log(error));
   };
 
-  const loginUser = () => {};
+  const singInUser = (user) => {
+    const { email, password } = user;
+
+    const foundUser = users.find((user) => user.email === email);
+
+    if (foundUser) {
+      if (foundUser.password === password) {
+        setIsLogged(true);
+
+        setIsShowingPopUp(true);
+        setMessagePopUp("User successfully log in");
+        setUrlicon(iconCheck);
+        setTimeout(() => {
+          setIsShowingPopUp(false);
+        }, 2000);
+      } else {
+        setIsShowingPopUp(true);
+        setMessagePopUp("Incorrect password");
+        setUrlicon(icondelete);
+        setTimeout(() => {
+          setIsShowingPopUp(false);
+        }, 2000);
+      }
+    } else {
+      console.log("User not found");
+    }
+  };
 
   const handleClickUpdateUser = (user) => {
     setIsShowingModal(true);
@@ -98,7 +125,12 @@ export const useUserManagement = () => {
       setIsLoginUser(false);
     }
 
-    setIsShowingModal(!isShowingModal);
+    // Cerrar el modal si el usuario ha iniciado sesión
+    if (isLogged) {
+      setIsLogged(false);
+    } else {
+      setIsShowingModal(!isShowingModal);
+    }
   };
 
   useEffect(() => {
@@ -111,7 +143,6 @@ export const useUserManagement = () => {
     users,
     createUser,
     deleteUser,
-    loginUser,
     handleClickUpdateUser,
     updateUser,
     handleToggleModal,
@@ -119,5 +150,7 @@ export const useUserManagement = () => {
     isShowingPopUp,
     messagePopUp,
     isLoginUser,
+    singInUser,
+    isLogged,
   };
 };

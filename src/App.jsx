@@ -18,6 +18,7 @@ function App() {
     urlicon,
     isShowingPopUp,
     messagePopUp,
+    isLoginUser,
   } = useUserManagement();
 
   return (
@@ -36,6 +37,7 @@ function App() {
           handleToggleModal={handleToggleModal}
           createUser={createUser}
           updateUser={updateUser}
+          isLoginUser={isLoginUser}
         />
         <RequestSuccesfull
           urlicon={urlicon}

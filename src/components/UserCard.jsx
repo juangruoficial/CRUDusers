@@ -1,12 +1,23 @@
 import React from "react";
+import { motion } from "framer-motion";
+import {
+  cardVariants,
+  buttonHoverVariantsLeft,
+  buttonHoverVariantsRight,
+} from "../shared/constants";
 
 const UserCard = ({ user, deleteUser, handleClickUpdateUser }) => {
   const defaultImage = "/images/user.png";
   return (
-    <article className="grid gap-4 sm:gap-6 bg-gray-800 p-4 sm:p-6 md:p-8 rounded-lg shadow-md">
-      <header className="flex flex-col gap-2 sm:gap-3">
+    <motion.article
+      className="grid gap-5 sm:gap-5 bg-gray-800 p-10 sm:p-6 md:p-8 rounded-lg shadow-lg"
+      initial="hidden"
+      animate="visible"
+      variants={cardVariants}
+    >
+      <header className="flex flex-col gap-5">
         <img
-          className="w-16 h-16 md:w-20 md:h-20 mx-auto rounded-full border-2 border-gray-500"
+          className="w-30 h-30 mx-auto rounded-full border-8 border-white outline-dashed "
           src={user.image_url || defaultImage}
           alt=""
         />
@@ -32,28 +43,34 @@ const UserCard = ({ user, deleteUser, handleClickUpdateUser }) => {
         <span className="text-sm text-gray-300">{user.birthday}</span>
       </p>
       <div className="flex mt-4 justify-center sm:justify-start">
-        <button
+        <motion.button
           onClick={() => deleteUser(user.id)}
           className="p-2 w-24 bg-gray-700 text-white font-semibold rounded-md transition duration-300 ease-in-out hover:bg-gray-600 focus:outline-none focus:bg-gray-600"
+          whileHover="hover"
+          variants={buttonHoverVariantsLeft}
         >
-          <img
+          <motion.img
+            initial={{ x: 0 }}
             className="w-[30px] h-[30px] mx-auto"
             src="/images/delete.png"
             alt=""
           />
-        </button>
-        <button
+        </motion.button>
+        <motion.button
+          whileHover="hover"
+          variants={buttonHoverVariantsRight}
           onClick={() => handleClickUpdateUser(user)}
           className="p-2 w-24 bg-gray-700 text-white font-semibold rounded-md ml-2 transition duration-300 ease-in-out hover:bg-gray-600 focus:outline-none focus:bg-gray-600"
         >
-          <img
+          <motion.img
+            initial={{ x: 0 }}
             className="w-[30px] h-[30px] mx-auto"
             src="/images/pen.png"
             alt=""
           />
-        </button>
+        </motion.button>
       </div>
-    </article>
+    </motion.article>
   );
 };
 

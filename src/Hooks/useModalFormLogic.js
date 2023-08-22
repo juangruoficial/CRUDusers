@@ -1,16 +1,28 @@
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { EMPTY_FORM_VALUES } from "../shared/constants";
+import { useUserManagement } from "./useUserManagment";
 
 export function useModalFormLogic({
   isUpdatingUser,
   createUser,
   updateUser,
   isShowingModal,
+  isLoginUser,
+  omittedFields = [],
 }) {
   const { handleSubmit, register, reset, watch, formState } = useForm();
-  const title = isUpdatingUser ? "Update User" : "New User";
-  const buttonText = isUpdatingUser ? "Update" : "Create";
+  const title = isUpdatingUser
+    ? "Update User"
+    : isLoginUser
+    ? "Sing in"
+    : "New User";
+
+  const buttonText = isUpdatingUser
+    ? "Update"
+    : isLoginUser
+    ? "Log in"
+    : "Create";
 
   const resetRef = useRef(reset);
 
@@ -24,11 +36,15 @@ export function useModalFormLogic({
 
   useEffect(() => {
     if (!isShowingModal) resetRef.current(EMPTY_FORM_VALUES);
-  }, [isShowingModal]);
+    console.log("isLoginUser", isLoginUser);
+  }, [isShowingModal, isLoginUser]);
 
   const formProps = {
     handleSubmit: handleSubmit(submit),
-    register,
+    register: (name, options = {}) => {
+      const isDisabled = isLoginUser && omittedFields.includes(name);
+      return register(name, { ...options, disabled: isDisabled });
+    },
     title,
     buttonText,
     resetRef,

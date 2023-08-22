@@ -20,6 +20,7 @@ export const useUserManagement = () => {
   const [urlicon, setUrlicon] = useState(false);
   const [isShowingPopUp, setIsShowingPopUp] = useState(false);
   const [messagePopUp, setMessagePopUp] = useState("");
+  const [isLoginUser, setIsLoginUser] = useState(false);
 
   const createUser = (newUser, reset) => {
     apiCreateUser(newUser)
@@ -63,6 +64,8 @@ export const useUserManagement = () => {
       .catch((error) => console.log(error));
   };
 
+  const loginUser = () => {};
+
   const handleClickUpdateUser = (user) => {
     setIsShowingModal(true);
     setIsUpdatingUser(user);
@@ -86,9 +89,16 @@ export const useUserManagement = () => {
       });
   };
 
-  const handleToggleModal = () => {
-    setIsShowingModal(!isShowingModal);
+  const handleToggleModal = (modalType) => {
     setIsUpdatingUser(null);
+
+    if (modalType === "login") {
+      setIsLoginUser(true);
+    } else if (isLoginUser) {
+      setIsLoginUser(false);
+    }
+
+    setIsShowingModal(!isShowingModal);
   };
 
   useEffect(() => {
@@ -101,11 +111,13 @@ export const useUserManagement = () => {
     users,
     createUser,
     deleteUser,
+    loginUser,
     handleClickUpdateUser,
     updateUser,
     handleToggleModal,
     urlicon,
     isShowingPopUp,
     messagePopUp,
+    isLoginUser,
   };
 };

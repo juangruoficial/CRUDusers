@@ -5,16 +5,8 @@ import {
   deleteUser as apiDeleteUser,
   updateUser as apiUpdateUser,
 } from "../Services/apiFunctions.js";
-import { randomNumber } from "../Services/randomNumber.js";
 
-import { EMPTY_FORM_VALUES } from "../shared/constants.js";
-
-const iconUrls = {
-  check: "/images/check.png",
-  delete: "/images/delete.png",
-  updated: "/images/updated.png",
-  error: "/images/close.png",
-};
+import { EMPTY_FORM_VALUES, iconUrls } from "../shared/constants.js";
 
 export const useUserManagement = () => {
   const [isShowingModal, setIsShowingModal] = useState(false);
@@ -26,7 +18,6 @@ export const useUserManagement = () => {
   const [isLoginUser, setIsLoginUser] = useState(false);
   const [isLogged, setIsLogged] = useState(false);
   const [userLogged, setUserLogged] = useState(null);
-  const [randomPhotoUrl, setRandomPhotoUrl] = useState("");
 
   const showPopUp = (message, icon) => {
     setIsShowingPopUp(true);
@@ -71,9 +62,6 @@ export const useUserManagement = () => {
   };
 
   const deleteUser = (idUser) => {
-    console.log("isLogged", isLogged);
-    console.log("idUser", idUser);
-
     if (isLogged) {
       if (idUser === userLogged.id) {
         apiDeleteUser(idUser)
@@ -116,8 +104,18 @@ export const useUserManagement = () => {
   };
 
   const handleClickUpdateUser = (user) => {
-    setIsShowingModal(true);
-    setIsUpdatingUser(user);
+    if (isLogged) {
+      if (user.id === userLogged.id) {
+        setIsShowingModal(true);
+        setIsUpdatingUser(user);
+      } else {
+        showPopUp("You can't edit other users.", "error");
+        return;
+      }
+    } else {
+      showPopUp("You must be logged in to edit the account.", "error");
+      return;
+    }
   };
 
   const updateUser = (userUpdated, reset) => {

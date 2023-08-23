@@ -33,3 +33,10 @@ export const modalVariants = {
     },
   },
 };
+
+export const iconUrls = {
+  check: "/images/check.png",
+  delete: "/images/delete.png",
+  updated: "/images/updated.png",
+  error: "/images/close.png",
+};

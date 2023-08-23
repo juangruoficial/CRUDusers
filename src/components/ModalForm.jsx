@@ -53,9 +53,13 @@ const ModalForm = ({
               placeholder="First Name"
               id="first_name"
               registerProps={formProps.register("first_name", {
-                required: true,
-                maxLength: 20,
+                required: "First name is required",
+                maxLength: {
+                  value: 20,
+                  message: "First name is too long",
+                },
               })}
+              error={formProps.errors.first_name}
             />
 
             <TextInput
@@ -63,34 +67,55 @@ const ModalForm = ({
               placeholder={"Last Name"}
               id="last_name"
               registerProps={formProps.register("last_name", {
-                required: true,
-                maxLength: 20,
+                required: "Last name is required",
+                maxLength: {
+                  value: 20,
+                  message: "Last name is too long",
+                },
               })}
+              error={formProps.errors.last_name}
             />
             <TextInput
               type={"date"}
               placeholder="dd/mm/aaaa"
               urlIcon={"/images/birthday-cake.png"}
               id="birthday"
-              registerProps={formProps.register("birthday", { required: true })}
+              registerProps={formProps.register("birthday", {
+                required: "Birthday is required",
+              })}
             />
           </>
         )}
 
         <TextInput
-          type={"text"}
+          type={"email"}
           urlIcon={"/images/email.png"}
           placeholder={"Example@gmail.com"}
           id="email"
-          registerProps={formProps.register("email", { required: true })}
+          registerProps={formProps.register("email", {
+            required: "Email is required",
+            pattern: {
+              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+              message: "Invalid email format",
+            },
+          })}
+          error={formProps.errors.email}
         />
 
         <TextInput
-          type={"password"}
-          urlIcon={"/images/lock.png"}
-          placeholder={"Password"}
+          type="password"
+          urlIcon="/images/lock.png"
+          placeholder="Password"
           id="password"
-          registerProps={formProps.register("password", { required: true })}
+          registerProps={formProps.register("password", {
+            required: "Password is required",
+            pattern: {
+              value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/,
+              message:
+                "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number.",
+            },
+          })}
+          error={formProps.errors.password}
         />
 
         <button className="bg-gray-800 hover:bg-gray-900 focus:outline-none focus:bg-gray-700 w-52 self-center rounded-lg p-2 text-white font-semibold transition duration-300 ease-in-out">

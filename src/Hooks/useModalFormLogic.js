@@ -11,7 +11,13 @@ export function useModalFormLogic({
   omittedFields = [],
   singInUser,
 }) {
-  const { handleSubmit, register, reset, watch, formState } = useForm();
+  const {
+    handleSubmit,
+    register,
+    reset,
+    watch,
+    formState: { errors },
+  } = useForm();
   const title = isUpdatingUser
     ? "Update User"
     : isLoginUser
@@ -54,7 +60,8 @@ export function useModalFormLogic({
     buttonText,
     resetRef,
     watch,
-    formState,
+
+    errors,
   };
 
   return { formProps };

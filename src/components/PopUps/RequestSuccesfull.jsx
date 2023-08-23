@@ -4,7 +4,7 @@ const RequestSuccesfull = ({ messagePopUp, urlicon, isShowingPopUp }) => {
   const requestPopUpVariants = {
     hidden: { y: "500px", opacity: 0 },
     visible: {
-      y: "250px",
+      y: "-50%",
       x: "-50%",
       opacity: 1,
       transition: { type: "spring", stiffness: 100, damping: 12 },

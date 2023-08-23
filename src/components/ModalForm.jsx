@@ -1,6 +1,7 @@
 import TextInput from "./TextInput";
 import { useModalFormLogic } from "../Hooks/useModalFormLogic";
 import { motion } from "framer-motion";
+import { modalVariants } from "../shared/constants";
 
 const ModalForm = ({
   isShowingModal,
@@ -19,24 +20,8 @@ const ModalForm = ({
     handleToggleModal,
     isLoginUser,
     singInUser,
-    omittedFields: isLoginUser
-      ? ["first_name", "last_name", "birthday", "image_url"]
-      : [],
+    omittedFields: isLoginUser ? ["first_name", "last_name", "birthday"] : [],
   });
-
-  const modalVariants = {
-    hidden: { opacity: 0, y: "-100%" },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        type: "spring",
-        damping: 10,
-        stiffness: 100,
-      },
-    },
-  };
 
   return (
     <motion.section
@@ -88,15 +73,6 @@ const ModalForm = ({
               urlIcon={"/images/birthday-cake.png"}
               id="birthday"
               registerProps={formProps.register("birthday", { required: true })}
-            />
-            <TextInput
-              type={"text"}
-              urlIcon={"/images/image.png"}
-              placeholder={"Add an image URL here"}
-              id="image_url"
-              registerProps={formProps.register("image_url", {
-                required: true,
-              })}
             />
           </>
         )}

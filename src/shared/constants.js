@@ -4,7 +4,6 @@ export const EMPTY_FORM_VALUES = {
   birth_date: "",
   email: "",
   password: "",
-  image_url: "",
 };
 
 // variants animations
@@ -19,4 +18,18 @@ export const buttonHoverVariantsLeft = {
 
 export const buttonHoverVariantsRight = {
   hover: { x: 10, transition: { duration: 0.2 } },
+};
+
+export const modalVariants = {
+  hidden: { opacity: 0, y: "-100%" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      type: "spring",
+      damping: 10,
+      stiffness: 100,
+    },
+  },
 };

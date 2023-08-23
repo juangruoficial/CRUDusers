@@ -14,8 +14,10 @@ const Header = ({ handleToggleModal, isLogged, userLogged }) => {
     <header className="fixed top-0 w-full text-white bg-gray-800 py-2 shadow-md">
       <nav className="mx-auto max-w-[1024px]">
         <ul className="flex justify-between items-center p-4 md:p-6">
-          <li className="text-lg md:text-2xl font-bold">{TITLENAVPAGE}</li>
-          <li className="flex gap-8">
+          <li className="text-lg sm:text-2xl xl:text-3xl md:text-2xl font-bold">
+            {TITLENAVPAGE}
+          </li>
+          <li className="flex gap-1 sm:gap-5">
             <button
               onClick={() => handleToggleModal(isLogged ? "logout" : "login")}
               className="flex items-center gap-2 px-4 py-2 bg-gray-700 rounded-md transition duration-300 ease-in-out hover:bg-gray-600 focus:outline-none focus:bg-gray-600"

@@ -2,8 +2,9 @@ import { motion } from "framer-motion";
 
 const RequestSuccesfull = ({ messagePopUp, urlicon, isShowingPopUp }) => {
   const requestPopUpVariants = {
-    hidden: { x: "-100%", opacity: 0 },
+    hidden: { y: "500px", opacity: 0 },
     visible: {
+      y: "250px",
       x: "-50%",
       opacity: 1,
       transition: { type: "spring", stiffness: 100, damping: 12 },

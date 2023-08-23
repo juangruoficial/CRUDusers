@@ -26,7 +26,7 @@ const TextInput = ({
         />
       </section>
       {error && (
-        <p className="text-red-500 text-sm block mx-24">{error.message}</p>
+        <p className="text-red-500 text-sm block mx-[22%]">{error.message}</p>
       )}
     </>
   );

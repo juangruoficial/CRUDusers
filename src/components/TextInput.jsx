@@ -9,7 +9,6 @@ const TextInput = ({
   placeholder,
   error,
 }) => {
-  console.log(error?.message);
   return (
     <>
       <section className="flex gap-5">

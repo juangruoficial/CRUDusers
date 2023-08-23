@@ -84,15 +84,13 @@ export const useUserManagement = () => {
   const singInUser = (user) => {
     const { email, password } = user;
     const foundUser = users.find((user) => user.email === email);
-    console.log("isLogged", isLogged);
+
     if (foundUser) {
       if (foundUser.password === password) {
         setIsLogged(true);
         setIsShowingModal(false);
         showPopUp("User successfully log in", "check");
         setUserLogged(foundUser);
-        console.log(foundUser);
-        console.log("isLogged", isLogged);
       } else {
         setIsShowingPopUp(true);
         showPopUp("Incorrect password", "error");

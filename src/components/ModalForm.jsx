@@ -118,7 +118,7 @@ const ModalForm = ({
           error={formProps.errors.password}
         />
 
-        <button className="bg-gray-800 hover:bg-gray-900 focus:outline-none focus:bg-gray-700 w-52 self-center rounded-lg p-2 text-white font-semibold transition duration-300 ease-in-out">
+        <button className="bg-gray-800 hover:bg-gray-900 focus:outline-none focus:bg-gray-600 w-52 self-center rounded-lg p-2 text-white font-semibold transition duration-300 ease-in-out">
           {formProps.buttonText}
         </button>
       </form>

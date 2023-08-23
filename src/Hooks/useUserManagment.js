@@ -91,6 +91,7 @@ export const useUserManagement = () => {
         setIsShowingModal(false);
         showPopUp("User successfully log in", "check");
         setUserLogged(foundUser);
+        setIsLoginUser(false);
       } else {
         setIsShowingPopUp(true);
         showPopUp("Incorrect password", "error");
@@ -131,7 +132,6 @@ export const useUserManagement = () => {
 
   const handleToggleModal = (modalType) => {
     setIsUpdatingUser(null);
-    console.log("Isloged", isLogged, "isloginUser", isLoginUser);
 
     if (modalType === "login") {
       setIsLoginUser(true);

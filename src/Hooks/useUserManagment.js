@@ -5,9 +5,9 @@ import {
   deleteUser as apiDeleteUser,
   updateUser as apiUpdateUser,
 } from "../Services/apiFunctions.js";
+import { randomNumber } from "../Services/randomNumber.js";
 
 import { EMPTY_FORM_VALUES } from "../shared/constants.js";
-import { set } from "react-hook-form";
 
 const iconUrls = {
   check: "/images/check.png",
@@ -26,6 +26,7 @@ export const useUserManagement = () => {
   const [isLoginUser, setIsLoginUser] = useState(false);
   const [isLogged, setIsLogged] = useState(false);
   const [userLogged, setUserLogged] = useState(null);
+  const [randomPhotoUrl, setRandomPhotoUrl] = useState("");
 
   const showPopUp = (message, icon) => {
     setIsShowingPopUp(true);

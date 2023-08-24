@@ -9,7 +9,7 @@ import {
 import { EMPTY_FORM_VALUES, iconUrls } from "../shared/constants.js";
 
 export const useUserManagement = () => {
-  const [userData, setUserData] = useState({
+  const initialUserData = {
     isShowingModal: false,
     isUpdatingUser: null,
     users: [],
@@ -19,7 +19,9 @@ export const useUserManagement = () => {
     isLoginUser: false,
     isLogged: false,
     userLogged: null,
-  });
+  };
+
+  const [userData, setUserData] = useState(initialUserData);
 
   const showPopUp = (message, icon) => {
     setUserData((prevData) => ({

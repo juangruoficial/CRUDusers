@@ -37,11 +37,15 @@ export const useUserManagement = () => {
       urlicon: iconUrls[popUpType],
     }));
     setTimeout(() => {
-      setUserData((prevData) => ({
-        ...prevData,
-        isShowingPopUp: false,
-      }));
+      closePopUp();
     }, 2000);
+  };
+
+  const closePopUp = () => {
+    setUserData((prevData) => ({
+      ...prevData,
+      isShowingPopUp: false,
+    }));
   };
 
   const closeModal = () => {

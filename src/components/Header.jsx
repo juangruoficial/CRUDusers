@@ -1,5 +1,5 @@
 import React from "react";
-import { useUserManagement } from "../Hooks/useUserManagment";
+import HeaderButton from "./HeaderButton";
 
 const Header = ({ handleToggleModal, isLogged, userLogged }) => {
   const TITLENAVPAGE = isLogged
@@ -18,27 +18,18 @@ const Header = ({ handleToggleModal, isLogged, userLogged }) => {
             {TITLENAVPAGE}
           </li>
           <li className="flex gap-1 sm:gap-5">
-            <button
+            <HeaderButton
               onClick={() => handleToggleModal(isLogged ? "logout" : "login")}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-700 rounded-md transition duration-300 ease-in-out hover:bg-gray-600 focus:outline-none focus:bg-gray-600"
-            >
-              <img className="w-6 h-6 md:w-8 md:h-8" src={logoutIcon} alt="" />
-              <p className="hidden sm:block">{logout}</p>
-            </button>
+              iconSrc={logoutIcon}
+              label={logout}
+            />
 
             {!isLogged && (
-              <button
+              <HeaderButton
                 onClick={() => handleToggleModal("user")}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-700 rounded-md transition duration-300 ease-in-out hover:bg-gray-600 focus:outline-none focus:bg-gray-600"
-              >
-                <img
-                  className="w-6 h-6 md:w-8 md:h-8"
-                  src="/images/sign-up.png"
-                  alt=""
-                />
-
-                <p className="hidden sm:block">Sign Up</p>
-              </button>
+                iconSrc="/images/sign-up.png"
+                label="Sign Up"
+              />
             )}
           </li>
         </ul>

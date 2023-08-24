@@ -60,7 +60,6 @@ export function useModalFormLogic({
     buttonText,
     resetRef,
     watch,
-
     errors,
   };
 

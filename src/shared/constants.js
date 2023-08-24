@@ -6,6 +6,35 @@ export const EMPTY_FORM_VALUES = {
   password: "",
 };
 
+export const ERROR_MESSAGES = {
+  USER_ALREADY_EXISTS:
+    "User with this email already exists. Please use a different email.",
+  USER_CREATED_SUCCESS: "User created successfully",
+  ERROR_CREATING_USER: "Error creating user",
+  MUST_BE_LOGGED_DELETE: "You must be logged in to delete the account.",
+  CANNOT_DELETE_OTHER_USERS: "You can't delete other users.",
+  USER_DELETED_SUCCESS: "User deleted successfully",
+  USER_LOGGED_IN_SUCCESS: "User successfully log in",
+  INCORRECT_PASSWORD: "Incorrect password",
+  USER_NOT_FOUND: "User not found",
+  MUST_BE_LOGGED_EDIT: "You must be logged in to edit the account.",
+  CANNOT_EDIT_OTHER_USERS: "You can't edit other users.",
+  USER_UPDATED_SUCCESS: "User updated successfully",
+  USER_LOGGED_OUT_SUCCESS: "User successfully log out",
+};
+
+export const POP_UP_TYPES = {
+  ERROR: "error",
+  CHECK: "check",
+  DELETE: "delete",
+  UPDATED: "updated",
+};
+
+export const MODAL_TYPES = {
+  LOGIN: "login",
+  LOGOUT: "logout",
+};
+
 // variants animations
 
 export const cardVariants = {

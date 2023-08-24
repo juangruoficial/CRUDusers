@@ -6,19 +6,13 @@ import {
   updateUser as apiUpdateUser,
 } from "../Services/apiFunctions.js";
 
-import { EMPTY_FORM_VALUES, iconUrls } from "../shared/constants.js";
-
-const POP_UP_TYPES = {
-  ERROR: "error",
-  CHECK: "check",
-  DELETE: "delete",
-  UPDATED: "updated",
-};
-
-const MODAL_TYPES = {
-  LOGIN: "login",
-  LOGOUT: "logout",
-};
+import {
+  EMPTY_FORM_VALUES,
+  iconUrls,
+  POP_UP_TYPES,
+  MODAL_TYPES,
+  ERROR_MESSAGES,
+} from "../shared/constants.js";
 
 export const useUserManagement = () => {
   const initialUserData = {
@@ -73,35 +67,29 @@ export const useUserManagement = () => {
 
   const createUser = (newUser, reset) => {
     if (checkEmailExists(newUser.email))
-      return showPopUp(
-        "User with this email already exists. Please use a different email.",
-        POP_UP_TYPES.ERROR
-      );
+      return showPopUp(ERROR_MESSAGES.USER_ALREADY_EXISTS, POP_UP_TYPES.ERROR);
 
     apiCreateUser(newUser)
       .then(() => {
         fetchUsers();
         reset(EMPTY_FORM_VALUES);
-        showPopUp("User created successfully", POP_UP_TYPES.CHECK);
+        showPopUp(ERROR_MESSAGES.USER_CREATED_SUCCESS, POP_UP_TYPES.CHECK);
       })
       .catch((error) => {
         console.log(error);
-        showPopUp("Error creating user", POP_UP_TYPES.ERROR);
+        showPopUp(ERROR_MESSAGES.ERROR_CREATING_USER, POP_UP_TYPES.ERROR);
       })
       .finally(() => closeModal());
   };
 
   const deleteUser = (idUser) => {
     if (!userData.isLogged) {
-      showPopUp(
-        "You must be logged in to delete the account.",
-        POP_UP_TYPES.ERROR
-      );
+      showPopUp(ERROR_MESSAGES.MUST_BE_LOGGED_DELETE, POP_UP_TYPES.ERROR);
       return;
     }
 
     if (idUser !== userData.userLogged.id) {
-      showPopUp("You can't delete other users.", POP_UP_TYPES.ERROR);
+      showPopUp(ERROR_MESSAGES.CANNOT_DELETE_OTHER_USERS, POP_UP_TYPES.ERROR);
       return;
     }
 
@@ -109,7 +97,7 @@ export const useUserManagement = () => {
       apiDeleteUser(idUser)
         .then(() => {
           fetchUsers();
-          showPopUp("User deleted successfully", POP_UP_TYPES.DELETE);
+          showPopUp(ERROR_MESSAGES.USER_DELETED_SUCCESS, POP_UP_TYPES.DELETE);
           setUserData((prevData) => ({
             ...prevData,
             isLogged: false,
@@ -126,36 +114,30 @@ export const useUserManagement = () => {
 
     if (foundUser) {
       if (foundUser.password === password) {
-        setUserData((prevData) => ({
-          ...prevData,
-          isLogged: true,
-          isShowingModal: false,
-          userLogged: foundUser,
-          isLoginUser: false,
-        }));
-        showPopUp("User successfully log in", POP_UP_TYPES.CHECK);
+        loginUser(foundUser);
+        showPopUp(ERROR_MESSAGES.USER_LOGGED_IN_SUCCESS, POP_UP_TYPES.CHECK);
       } else {
-        setUserData((prevData) => ({
-          ...prevData,
-          isShowingPopUp: true,
-        }));
-        showPopUp("Incorrect password", POP_UP_TYPES.ERROR);
+        showPopUp(ERROR_MESSAGES.INCORRECT_PASSWORD, POP_UP_TYPES.ERROR);
       }
     } else {
-      setUserData((prevData) => ({
-        ...prevData,
-        isShowingPopUp: true,
-      }));
-      showPopUp("User not found", POP_UP_TYPES.ERROR);
+      showPopUp(ERROR_MESSAGES.USER_NOT_FOUND, POP_UP_TYPES.ERROR);
     }
+  };
+
+  const loginUser = (user) => {
+    setUserData((prevData) => ({
+      ...prevData,
+      isLogged: true,
+      isShowingModal: false,
+      userLogged: user,
+      isLoginUser: false,
+      isShowingPopUp: false,
+    }));
   };
 
   const handleClickUpdateUser = (user) => {
     if (!userData.isLogged) {
-      showPopUp(
-        "You must be logged in to edit the account.",
-        POP_UP_TYPES.ERROR
-      );
+      showPopUp(ERROR_MESSAGES.MUST_BE_LOGGED_EDIT, POP_UP_TYPES.ERROR);
       return;
     }
 
@@ -166,7 +148,7 @@ export const useUserManagement = () => {
         isUpdatingUser: user,
       }));
     } else {
-      showPopUp("You can't edit other users.", POP_UP_TYPES.ERROR);
+      showPopUp(ERROR_MESSAGES.CANNOT_EDIT_OTHER_USERS, POP_UP_TYPES.ERROR);
     }
   };
 
@@ -175,7 +157,7 @@ export const useUserManagement = () => {
       .then(() => {
         fetchUsers();
         reset(EMPTY_FORM_VALUES);
-        showPopUp("User updated successfully", POP_UP_TYPES.UPDATED);
+        showPopUp(ERROR_MESSAGES.USER_UPDATED_SUCCESS, POP_UP_TYPES.UPDATED);
       })
       .catch((error) => console.log(error))
       .finally(() => {
@@ -211,7 +193,7 @@ export const useUserManagement = () => {
         ...prevData,
         isLogged: false,
       }));
-      showPopUp("User successfully log out", POP_UP_TYPES.CHECK);
+      showPopUp(ERROR_MESSAGES.USER_LOGGED_OUT_SUCCESS, POP_UP_TYPES.CHECK);
       setUserData((prevData) => ({
         ...prevData,
         isShowingModal: false,

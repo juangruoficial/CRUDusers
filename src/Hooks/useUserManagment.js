@@ -8,6 +8,18 @@ import {
 
 import { EMPTY_FORM_VALUES, iconUrls } from "../shared/constants.js";
 
+const POP_UP_TYPES = {
+  ERROR: "error",
+  CHECK: "check",
+  DELETE: "delete",
+  UPDATED: "updated",
+};
+
+const MODAL_TYPES = {
+  LOGIN: "login",
+  LOGOUT: "logout",
+};
+
 export const useUserManagement = () => {
   const initialUserData = {
     isShowingModal: false,
@@ -23,12 +35,12 @@ export const useUserManagement = () => {
 
   const [userData, setUserData] = useState(initialUserData);
 
-  const showPopUp = (message, icon) => {
+  const showPopUp = (message, popUpType) => {
     setUserData((prevData) => ({
       ...prevData,
       isShowingPopUp: true,
       messagePopUp: message,
-      urlicon: iconUrls[icon],
+      urlicon: iconUrls[popUpType],
     }));
     setTimeout(() => {
       setUserData((prevData) => ({
@@ -63,30 +75,33 @@ export const useUserManagement = () => {
     if (checkEmailExists(newUser.email))
       return showPopUp(
         "User with this email already exists. Please use a different email.",
-        "error"
+        POP_UP_TYPES.ERROR
       );
 
     apiCreateUser(newUser)
       .then(() => {
         fetchUsers();
         reset(EMPTY_FORM_VALUES);
-        showPopUp("User created successfully", "check");
+        showPopUp("User created successfully", POP_UP_TYPES.CHECK);
       })
       .catch((error) => {
         console.log(error);
-        showPopUp("Error creating user", "error");
+        showPopUp("Error creating user", POP_UP_TYPES.ERROR);
       })
       .finally(() => closeModal());
   };
 
   const deleteUser = (idUser) => {
     if (!userData.isLogged) {
-      showPopUp("You must be logged in to delete the account.", "error");
+      showPopUp(
+        "You must be logged in to delete the account.",
+        POP_UP_TYPES.ERROR
+      );
       return;
     }
 
     if (idUser !== userData.userLogged.id) {
-      showPopUp("You can't delete other users.", "error");
+      showPopUp("You can't delete other users.", POP_UP_TYPES.ERROR);
       return;
     }
 
@@ -94,7 +109,7 @@ export const useUserManagement = () => {
       apiDeleteUser(idUser)
         .then(() => {
           fetchUsers();
-          showPopUp("User deleted successfully", "delete");
+          showPopUp("User deleted successfully", POP_UP_TYPES.DELETE);
           setUserData((prevData) => ({
             ...prevData,
             isLogged: false,
@@ -118,26 +133,29 @@ export const useUserManagement = () => {
           userLogged: foundUser,
           isLoginUser: false,
         }));
-        showPopUp("User successfully log in", "check");
+        showPopUp("User successfully log in", POP_UP_TYPES.CHECK);
       } else {
         setUserData((prevData) => ({
           ...prevData,
           isShowingPopUp: true,
         }));
-        showPopUp("Incorrect password", "error");
+        showPopUp("Incorrect password", POP_UP_TYPES.ERROR);
       }
     } else {
       setUserData((prevData) => ({
         ...prevData,
         isShowingPopUp: true,
       }));
-      showPopUp("User not found", "error");
+      showPopUp("User not found", POP_UP_TYPES.ERROR);
     }
   };
 
   const handleClickUpdateUser = (user) => {
     if (!userData.isLogged) {
-      showPopUp("You must be logged in to edit the account.", "error");
+      showPopUp(
+        "You must be logged in to edit the account.",
+        POP_UP_TYPES.ERROR
+      );
       return;
     }
 
@@ -148,7 +166,7 @@ export const useUserManagement = () => {
         isUpdatingUser: user,
       }));
     } else {
-      showPopUp("You can't edit other users.", "error");
+      showPopUp("You can't edit other users.", POP_UP_TYPES.ERROR);
     }
   };
 
@@ -157,7 +175,7 @@ export const useUserManagement = () => {
       .then(() => {
         fetchUsers();
         reset(EMPTY_FORM_VALUES);
-        showPopUp("User updated successfully", "updated");
+        showPopUp("User updated successfully", POP_UP_TYPES.UPDATED);
       })
       .catch((error) => console.log(error))
       .finally(() => {
@@ -171,7 +189,7 @@ export const useUserManagement = () => {
       isUpdatingUser: null,
     }));
 
-    if (modalType === "login") {
+    if (modalType === MODAL_TYPES.LOGIN) {
       setUserData((prevData) => ({
         ...prevData,
         isLoginUser: true,
@@ -188,12 +206,12 @@ export const useUserManagement = () => {
       isShowingModal: !prevData.isShowingModal,
     }));
 
-    if (modalType === "logout") {
+    if (modalType === MODAL_TYPES.LOGOUT) {
       setUserData((prevData) => ({
         ...prevData,
         isLogged: false,
       }));
-      showPopUp("User successfully log out", "check");
+      showPopUp("User successfully log out", POP_UP_TYPES.CHECK);
       setUserData((prevData) => ({
         ...prevData,
         isShowingModal: false,

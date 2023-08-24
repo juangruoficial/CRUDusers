@@ -78,6 +78,11 @@ export const useUserManagement = () => {
         fetchUsers();
         reset(EMPTY_FORM_VALUES);
         showPopUp(ERROR_MESSAGES.USER_CREATED_SUCCESS, POP_UP_TYPES.CHECK);
+        setUserData((prevData) => ({
+          ...prevData,
+          isLogged: true,
+          userLogged: newUser,
+        }));
       })
       .catch((error) => {
         console.log(error);

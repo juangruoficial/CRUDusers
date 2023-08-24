@@ -1,6 +1,11 @@
 import { motion } from "framer-motion";
 
-const RequestSuccesfull = ({ messagePopUp, urlicon, isShowingPopUp }) => {
+const RequestSuccesfull = ({
+  messagePopUp,
+  urlicon,
+  isShowingPopUp,
+  isDeletingUser,
+}) => {
   const requestPopUpVariants = {
     hidden: { y: "500px", opacity: 0 },
     visible: {
@@ -23,6 +28,11 @@ const RequestSuccesfull = ({ messagePopUp, urlicon, isShowingPopUp }) => {
         <article className="flex flex-col items-center space-y-4">
           <img className="w-20 h-20" src={urlicon} alt="" />
           <h1 className="text-lg font-semibold text-center">{messagePopUp}</h1>
+          {isDeletingUser && (
+            <button>
+              <img src="/images/delete.png" alt="" />
+            </button>
+          )}
         </article>
       </motion.section>
     )

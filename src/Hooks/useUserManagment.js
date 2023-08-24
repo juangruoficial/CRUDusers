@@ -13,6 +13,7 @@ import {
   MODAL_TYPES,
   ERROR_MESSAGES,
 } from "../shared/constants.js";
+import { set } from "react-hook-form";
 
 export const useUserManagement = () => {
   const initialUserData = {
@@ -25,6 +26,9 @@ export const useUserManagement = () => {
     isLoginUser: false,
     isLogged: false,
     userLogged: null,
+    isFetchingUsers: false,
+    isDeletingUser: false,
+    isActiveError404: false,
   };
 
   const [userData, setUserData] = useState(initialUserData);
@@ -58,12 +62,30 @@ export const useUserManagement = () => {
   };
 
   const fetchUsers = () => {
-    getAllUsers().then(({ data }) => {
-      setUserData((prevData) => ({
-        ...prevData,
-        users: data,
-      }));
-    });
+    setUserData((prevData) => ({
+      ...prevData,
+      isFetchingUsers: true,
+    }));
+
+    getAllUsers()
+      .then(({ data }) => {
+        setUserData((prevData) => ({
+          ...prevData,
+          users: data,
+          isFetchingUsers: false,
+        }));
+      })
+      .catch((error) => {
+        console.log(error);
+        setUserData((prevData) => ({
+          ...prevData,
+          isActiveError404: true,
+        }));
+        setUserData((prevData) => ({
+          ...prevData,
+          isFetchingUsers: false,
+        }));
+      });
   };
 
   const checkEmailExists = (email) =>
@@ -103,6 +125,11 @@ export const useUserManagement = () => {
     }
 
     if (idUser === userData.userLogged.id) {
+      setUserData((prevData) => ({
+        ...prevData,
+        isDeletingUser: true,
+      }));
+
       apiDeleteUser(idUser)
         .then(() => {
           fetchUsers();
@@ -124,6 +151,7 @@ export const useUserManagement = () => {
     if (foundUser) {
       if (foundUser.password === password) {
         loginUser(foundUser);
+        fetchUsers();
         showPopUp(ERROR_MESSAGES.USER_LOGGED_IN_SUCCESS, POP_UP_TYPES.CHECK);
       } else {
         showPopUp(ERROR_MESSAGES.INCORRECT_PASSWORD, POP_UP_TYPES.ERROR);
@@ -202,6 +230,7 @@ export const useUserManagement = () => {
         ...prevData,
         isLogged: false,
       }));
+      fetchUsers();
       showPopUp(ERROR_MESSAGES.USER_LOGGED_OUT_SUCCESS, POP_UP_TYPES.CHECK);
       setUserData((prevData) => ({
         ...prevData,

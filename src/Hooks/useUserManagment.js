@@ -7,6 +7,7 @@ import {
 } from "../Services/apiFunctions.js";
 
 import { EMPTY_FORM_VALUES, iconUrls } from "../shared/constants.js";
+import { set } from "react-hook-form";
 
 export const useUserManagement = () => {
   const [isShowingModal, setIsShowingModal] = useState(false);
@@ -58,7 +59,7 @@ export const useUserManagement = () => {
         console.log(error);
         showPopUp("Error creating user", "error");
       })
-      .finally(() => closeModal);
+      .finally(() => closeModal());
   };
 
   const deleteUser = (idUser) => {
@@ -80,7 +81,7 @@ export const useUserManagement = () => {
           setIsLogged(false);
         })
         .catch((error) => console.log(error))
-        .finally(() => closeModal);
+        .finally(() => closeModal());
     }
   };
 

@@ -37,16 +37,16 @@ export const useUserManagement = () => {
   const fetchUsers = () => {
     getAllUsers().then(({ data }) => setUsers(data));
   };
-  const createUser = (newUser, reset) => {
-    const emailExists = users.some((user) => user.email === newUser.email);
 
-    if (emailExists) {
-      showPopUp(
+  const checkEmailExists = (email) =>
+    users.some((user) => user.email === email);
+
+  const createUser = (newUser, reset) => {
+    if (checkEmailExists(newUser.email))
+      return showPopUp(
         "User with this email already exists. Please use a different email.",
         "error"
       );
-      return;
-    }
 
     apiCreateUser(newUser)
       .then(() => {
@@ -58,26 +58,29 @@ export const useUserManagement = () => {
         console.log(error);
         showPopUp("Error creating user", "error");
       })
-      .finally(() => closeModal());
+      .finally(() => closeModal);
   };
 
   const deleteUser = (idUser) => {
-    if (isLogged) {
-      if (idUser === userLogged.id) {
-        apiDeleteUser(idUser)
-          .then(() => {
-            fetchUsers();
-            showPopUp("User deleted successfully", "delete");
-          })
-          .catch((error) => console.log(error))
-          .finally(() => closeModal());
-      } else {
-        showPopUp("You can't delete other users.", "error");
-        return;
-      }
-    } else {
+    if (!isLogged) {
       showPopUp("You must be logged in to delete the account.", "error");
       return;
+    }
+
+    if (idUser !== userLogged.id) {
+      showPopUp("You can't delete other users.", "error");
+      return;
+    }
+
+    if (idUser === userLogged.id) {
+      apiDeleteUser(idUser)
+        .then(() => {
+          fetchUsers();
+          showPopUp("User deleted successfully", "delete");
+          setIsLogged(false);
+        })
+        .catch((error) => console.log(error))
+        .finally(() => closeModal);
     }
   };
 
@@ -103,17 +106,14 @@ export const useUserManagement = () => {
   };
 
   const handleClickUpdateUser = (user) => {
-    if (isLogged) {
-      if (user.id === userLogged.id) {
-        setIsShowingModal(true);
-        setIsUpdatingUser(user);
-      } else {
-        showPopUp("You can't edit other users.", "error");
-        return;
-      }
+    if (!isLogged)
+      return showPopUp("You must be logged in to edit the account.", "error");
+
+    if (user.id === userLogged.id) {
+      setIsShowingModal(true);
+      setIsUpdatingUser(user);
     } else {
-      showPopUp("You must be logged in to edit the account.", "error");
-      return;
+      showPopUp("You can't edit other users.", "error");
     }
   };
 

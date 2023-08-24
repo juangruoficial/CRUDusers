@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { get, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { EMPTY_FORM_VALUES } from "../shared/constants";
 
 export function useModalFormLogic({

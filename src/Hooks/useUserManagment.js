@@ -9,37 +9,53 @@ import {
 import { EMPTY_FORM_VALUES, iconUrls } from "../shared/constants.js";
 
 export const useUserManagement = () => {
-  const [isShowingModal, setIsShowingModal] = useState(false);
-  const [isUpdatingUser, setIsUpdatingUser] = useState(null);
-  const [users, setUsers] = useState([]);
-  const [urlicon, setUrlicon] = useState(false);
-  const [isShowingPopUp, setIsShowingPopUp] = useState(false);
-  const [messagePopUp, setMessagePopUp] = useState("");
-  const [isLoginUser, setIsLoginUser] = useState(false);
-  const [isLogged, setIsLogged] = useState(false);
-  const [userLogged, setUserLogged] = useState(null);
+  const [userData, setUserData] = useState({
+    isShowingModal: false,
+    isUpdatingUser: null,
+    users: [],
+    urlicon: false,
+    isShowingPopUp: false,
+    messagePopUp: "",
+    isLoginUser: false,
+    isLogged: false,
+    userLogged: null,
+  });
 
   const showPopUp = (message, icon) => {
-    setIsShowingPopUp(true);
-    setMessagePopUp(message);
-    setUrlicon(iconUrls[icon]);
+    setUserData((prevData) => ({
+      ...prevData,
+      isShowingPopUp: true,
+      messagePopUp: message,
+      urlicon: iconUrls[icon],
+    }));
     setTimeout(() => {
-      setIsShowingPopUp(false);
+      setUserData((prevData) => ({
+        ...prevData,
+        isShowingPopUp: false,
+      }));
     }, 2000);
   };
 
   const closeModal = () => {
-    setIsUpdatingUser(null);
-    setIsShowingModal(false);
-    setIsLoginUser(false);
+    setUserData((prevData) => ({
+      ...prevData,
+      isUpdatingUser: null,
+      isShowingModal: false,
+      isLoginUser: false,
+    }));
   };
 
   const fetchUsers = () => {
-    getAllUsers().then(({ data }) => setUsers(data));
+    getAllUsers().then(({ data }) => {
+      setUserData((prevData) => ({
+        ...prevData,
+        users: data,
+      }));
+    });
   };
 
   const checkEmailExists = (email) =>
-    users.some((user) => user.email === email);
+    userData.users.some((user) => user.email === email);
 
   const createUser = (newUser, reset) => {
     if (checkEmailExists(newUser.email))
@@ -62,63 +78,80 @@ export const useUserManagement = () => {
   };
 
   const deleteUser = (idUser) => {
-    if (!isLogged) {
+    if (!userData.isLogged) {
       showPopUp("You must be logged in to delete the account.", "error");
       return;
     }
 
-    if (idUser !== userLogged.id) {
+    if (idUser !== userData.userLogged.id) {
       showPopUp("You can't delete other users.", "error");
       return;
     }
 
-    if (idUser === userLogged.id) {
+    if (idUser === userData.userLogged.id) {
       apiDeleteUser(idUser)
         .then(() => {
           fetchUsers();
           showPopUp("User deleted successfully", "delete");
-          setIsLogged(false);
+          setUserData((prevData) => ({
+            ...prevData,
+            isLogged: false,
+          }));
         })
         .catch((error) => console.log(error))
         .finally(() => closeModal());
     }
   };
 
-  const singInUser = (user) => {
+  const signInUser = (user) => {
     const { email, password } = user;
-    const foundUser = users.find((user) => user.email === email);
+    const foundUser = userData.users.find((user) => user.email === email);
 
     if (foundUser) {
       if (foundUser.password === password) {
-        setIsLogged(true);
-        setIsShowingModal(false);
+        setUserData((prevData) => ({
+          ...prevData,
+          isLogged: true,
+          isShowingModal: false,
+          userLogged: foundUser,
+          isLoginUser: false,
+        }));
         showPopUp("User successfully log in", "check");
-        setUserLogged(foundUser);
-        setIsLoginUser(false);
       } else {
-        setIsShowingPopUp(true);
+        setUserData((prevData) => ({
+          ...prevData,
+          isShowingPopUp: true,
+        }));
         showPopUp("Incorrect password", "error");
       }
     } else {
-      setIsShowingPopUp(true);
+      setUserData((prevData) => ({
+        ...prevData,
+        isShowingPopUp: true,
+      }));
       showPopUp("User not found", "error");
     }
   };
 
   const handleClickUpdateUser = (user) => {
-    if (!isLogged)
-      return showPopUp("You must be logged in to edit the account.", "error");
+    if (!userData.isLogged) {
+      showPopUp("You must be logged in to edit the account.", "error");
+      return;
+    }
 
-    if (user.id === userLogged.id) {
-      setIsShowingModal(true);
-      setIsUpdatingUser(user);
+    if (user.id === userData.userLogged.id) {
+      setUserData((prevData) => ({
+        ...prevData,
+        isShowingModal: true,
+        isUpdatingUser: user,
+      }));
     } else {
       showPopUp("You can't edit other users.", "error");
     }
   };
 
   const updateUser = (userUpdated, reset) => {
-    apiUpdateUser(isUpdatingUser.id, userUpdated)
+    apiUpdateUser(userData.isUpdatingUser.id, userUpdated)
       .then(() => {
         fetchUsers();
         reset(EMPTY_FORM_VALUES);
@@ -126,45 +159,57 @@ export const useUserManagement = () => {
       })
       .catch((error) => console.log(error))
       .finally(() => {
-        setIsShowingModal(false);
+        closeModal();
       });
   };
 
   const handleToggleModal = (modalType) => {
-    setIsUpdatingUser(null);
+    setUserData((prevData) => ({
+      ...prevData,
+      isUpdatingUser: null,
+    }));
 
     if (modalType === "login") {
-      setIsLoginUser(true);
+      setUserData((prevData) => ({
+        ...prevData,
+        isLoginUser: true,
+      }));
     }
-    if (isLoginUser) setIsLoginUser(false);
-    setIsShowingModal(!isShowingModal);
+    if (userData.isLoginUser) {
+      setUserData((prevData) => ({
+        ...prevData,
+        isLoginUser: false,
+      }));
+    }
+    setUserData((prevData) => ({
+      ...prevData,
+      isShowingModal: !prevData.isShowingModal,
+    }));
 
     if (modalType === "logout") {
-      setIsLogged(false);
+      setUserData((prevData) => ({
+        ...prevData,
+        isLogged: false,
+      }));
       showPopUp("User successfully log out", "check");
-      setIsShowingModal(false);
+      setUserData((prevData) => ({
+        ...prevData,
+        isShowingModal: false,
+      }));
     }
   };
 
   useEffect(() => {
-    getAllUsers().then(({ data }) => setUsers(data));
+    fetchUsers();
   }, []);
 
   return {
-    isShowingModal,
-    isUpdatingUser,
-    users,
+    ...userData,
     createUser,
     deleteUser,
     handleClickUpdateUser,
     updateUser,
     handleToggleModal,
-    urlicon,
-    isShowingPopUp,
-    messagePopUp,
-    isLoginUser,
-    singInUser,
-    isLogged,
-    userLogged,
+    signInUser,
   };
 };

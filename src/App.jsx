@@ -1,6 +1,7 @@
 import "./App.css";
 import Header from "./components/Header";
 import ModalForm from "./components/ModalForm";
+import Err404PopUp from "./components/PopUps/Err404PopUp";
 import RequestSuccesfull from "./components/PopUps/RequestSuccesfull";
 import UserList from "./components/UserList";
 import { useUserManagement } from "./Hooks/useUserManagment";
@@ -19,7 +20,7 @@ function App() {
     isShowingPopUp,
     messagePopUp,
     isLoginUser,
-    singInUser,
+    signInUser,
     isLogged,
     userLogged,
   } = useUserManagement();
@@ -45,7 +46,7 @@ function App() {
           createUser={createUser}
           updateUser={updateUser}
           isLoginUser={isLoginUser}
-          singInUser={singInUser}
+          signInUser={signInUser}
         />
         <RequestSuccesfull
           urlicon={urlicon}

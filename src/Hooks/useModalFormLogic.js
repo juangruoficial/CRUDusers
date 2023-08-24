@@ -9,7 +9,7 @@ export function useModalFormLogic({
   isShowingModal,
   isLoginUser,
   omittedFields = [],
-  singInUser,
+  signInUser,
 }) {
   const {
     handleSubmit,
@@ -34,7 +34,7 @@ export function useModalFormLogic({
 
   const submit = (data) => {
     if (isLoginUser) {
-      singInUser(data);
+      signInUser(data);
     } else if (isUpdatingUser) {
       updateUser(data, reset);
     } else {

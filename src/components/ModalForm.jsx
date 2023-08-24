@@ -10,7 +10,7 @@ const ModalForm = ({
   isUpdatingUser,
   updateUser,
   isLoginUser,
-  singInUser,
+  signInUser,
 }) => {
   const { formProps } = useModalFormLogic({
     isUpdatingUser,
@@ -19,7 +19,7 @@ const ModalForm = ({
     isShowingModal,
     handleToggleModal,
     isLoginUser,
-    singInUser,
+    signInUser,
     omittedFields: isLoginUser ? ["first_name", "last_name", "birthday"] : [],
   });
 

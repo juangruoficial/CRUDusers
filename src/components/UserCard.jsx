@@ -5,9 +5,13 @@ import {
   buttonHoverVariantsLeft,
   buttonHoverVariantsRight,
 } from "../shared/constants";
-import { randomNumber } from "../Services/randomNumber";
 
-const UserCard = ({ user, deleteUser, handleClickUpdateUser }) => {
+const UserCard = ({
+  user,
+  deleteUser,
+  handleClickUpdateUser,
+  randomNumber,
+}) => {
   return (
     <motion.article
       className="grid gap-5 sm:gap-5 bg-gray-800 p-10 sm:p-6 md:p-8 rounded-lg shadow-lg"
@@ -18,9 +22,7 @@ const UserCard = ({ user, deleteUser, handleClickUpdateUser }) => {
       <header className="flex flex-col gap-5">
         <img
           className="w-40 h-30 mx-auto rounded-full border-8 border-white outline-dashed "
-          src={`https://randomuser.me/api/portraits/med/men/${randomNumber(
-            30
-          )}.jpg`}
+          src={`https://randomuser.me/api/portraits/med/men/${randomNumber}.jpg`}
           alt=""
         />
         <h2 className="text-2xl md:text-3xl font-semibold text-center text-white">
